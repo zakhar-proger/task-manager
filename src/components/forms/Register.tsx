@@ -1,10 +1,11 @@
 "use client";
 
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import Button from "../ui/button";
-import Checkbox from "../ui/checkbox";
+import Button from "@/components/ui/button";
+import Checkbox from "@/components/ui/checkbox";
 
 const schema = z
   .object({
@@ -26,9 +27,23 @@ export default function RegisterForm() {
     formState: { errors },
     reset,
   } = useForm<RegisterFormValues>({ resolver: zodResolver(schema) });
+  const router = useRouter();
+
+  const fetchData = (data: RegisterFormValues) => {
+    fetch("/api/auth/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email: data.email, password: data.password }),
+    })
+      .then((res) => res.json())
+      .then((data) => console.log(data));
+  };
 
   const onSubmit = (data: RegisterFormValues) => {
     console.log("Форма отправлена:", JSON.stringify(data));
+    fetchData(data);
     reset();
   };
 
@@ -61,7 +76,11 @@ export default function RegisterForm() {
         </label>
       </div>
       <div className="flex gap-[25px]">
-        <Button variant="secondary" type="button">
+        <Button
+          variant="secondary"
+          type="button"
+          onClick={() => router.replace("/login")}
+        >
           Login
         </Button>
         <Button variant="primary" type="submit">

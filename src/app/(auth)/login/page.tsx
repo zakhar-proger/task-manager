@@ -1,7 +1,9 @@
-export default function Login() {
+import LoginForm from "@/components/forms/login";
+
+export default function loginPage() {
   return (
-    <div>
-      <input type="email" placeholder="email*" />
+    <div className="flex justify-center items-center h-screen">
+      <LoginForm />
     </div>
   );
 }
